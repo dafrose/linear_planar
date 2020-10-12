@@ -3,11 +3,10 @@ import nibabel as nib
 import scipy.optimize as opt
 # import pylab as pl
 
-from smt_lin_pla import *
+from linear_planar.smt_lin_pla import *
 
 from multiprocess import Pool
 
-import sys
 import os
 
 from time import time

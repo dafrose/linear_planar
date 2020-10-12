@@ -1,8 +1,8 @@
 import numpy as np
-from gs import findLinIndepRandomRot, gramSchmidt3
+from linear_planar.gs import findLinIndepRandomRot, gramSchmidt3
 from dipy.core.sphere import HemiSphere, disperse_charges
 # from sphHist import plotScatter3
-from smt_lin_pla import *
+from linear_planar.smt_lin_pla import *
 
 
 ## we want to generate a set of well distribution point on the sphere
