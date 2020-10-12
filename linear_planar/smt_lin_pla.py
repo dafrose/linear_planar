@@ -1,4 +1,4 @@
-import numpy as np 
+import numpy as np
 from scipy.special import erf
 import scipy as sp
 
@@ -39,70 +39,70 @@ import scipy as sp
 # b_delta = bd = {-0.5 if planar; 0 if spherical; 1 if linear}
 
 
-
 def main():
-	# a few b_delta
-	bd_pla = -0.5
-	bd_sph =  0.0
-	bd_lin =  1.0
+    # a few b_delta
+    bd_pla = -0.5
+    bd_sph = 0.0
+    bd_lin = 1.0
 
-	return None
-
+    return None
 
 
 # param conversion utils
 def Di_from_param(Dpar, Dperp):
-	return (Dpar+2*Dperp)/3.
+    return (Dpar + 2 * Dperp) / 3.
+
 
 def Dd_from_param(Dpar, Dperp):
-	return (Dpar-Dperp)/float(Dpar+2*Dperp)
+    return (Dpar - Dperp) / float(Dpar + 2 * Dperp)
+
 
 def Dpar_from_param(Di, Dd):
-	return Di*(1+2*Dd)
+    return Di * (1 + 2 * Dd)
+
 
 def Dperp_from_param(Di, Dd):
-	return Di*(1-Dd)
-
-
+    return Di * (1 - Dd)
 
 
 def gfunc(alpha):
-	# return sp.sqrt(np.pi/(4*alpha)) * erf(sp.sqrt(alpha))
-	tmp = sp.sqrt(np.pi/np.float64(4.*alpha)) * erf(sp.sqrt(alpha))
-	return np.where(np.abs(alpha)<1e-16, 1., np.abs(tmp)) # the abs is missing from the paper
+    # return sp.sqrt(np.pi/(4*alpha)) * erf(sp.sqrt(alpha))
+    tmp = sp.sqrt(np.pi / np.float64(4. * alpha)) * erf(sp.sqrt(alpha))
+    return np.where(np.abs(alpha) < 1e-16, 1., np.abs(tmp))  # the abs is missing from the paper
+
 
 # generic signal formula for any B-tensor shape and any D-tensor shape
 def sm_signal_generic(b, bd, Di, Dd):
-	return np.exp(-b*Di*(1-bd*Dd)) * gfunc(3*b*Di*bd*Dd)
+    return np.exp(-b * Di * (1 - bd * Dd)) * gfunc(3 * b * Di * bd * Dd)
+
 
 # generic signal formula for any B-tensor shape and any D-tensor shape reparametrized
 def sm_signal_generic_reparam(b, bd, Dpar, Dperp):
-	Di = Di_from_param(Dpar, Dperp)
-	Dd = Dd_from_param(Dpar, Dperp)
-	return sm_signal_generic(b, bd, Di, Dd)
+    Di = Di_from_param(Dpar, Dperp)
+    Dd = Dd_from_param(Dpar, Dperp)
+    return sm_signal_generic(b, bd, Di, Dd)
 
 
 # model1 stick(intra) + zepplin(extra) + ball(csf)
 def sm_signal_model_1(b, bd, Dpar_in, Dpar_ex, Dperp_ex, f_in, f_ex):
-	# stick-like intra axonal compartement with Dperp_ex = 0
-	sm_signal_in = sm_signal_generic_reparam(b, bd, Dpar_in, 0)
-	# zepplin-like extra axonal compartement
-	sm_signal_ex = sm_signal_generic_reparam(b, bd, Dpar_ex, Dperp_ex)
-	# ball-like csf axonal compartement with Dpar_ex = Dperp_ex = 3 um^2/ms (free water diffusivity at in-vivo human brain temperature)
-	sm_signal_csf = sm_signal_generic_reparam(b, bd, 3., 3.)
-	# model1 enforces sum(fraction) = 1 indirectly
-	f_csf = 1 - f_in - f_ex
-	return f_in*sm_signal_in + f_ex*sm_signal_ex + f_csf*sm_signal_csf
+    # stick-like intra axonal compartement with Dperp_ex = 0
+    sm_signal_in = sm_signal_generic_reparam(b, bd, Dpar_in, 0)
+    # zepplin-like extra axonal compartement
+    sm_signal_ex = sm_signal_generic_reparam(b, bd, Dpar_ex, Dperp_ex)
+    # ball-like csf axonal compartement with Dpar_ex = Dperp_ex = 3 um^2/ms (free water diffusivity at in-vivo human brain temperature)
+    sm_signal_csf = sm_signal_generic_reparam(b, bd, 3., 3.)
+    # model1 enforces sum(fraction) = 1 indirectly
+    f_csf = 1 - f_in - f_ex
+    return f_in * sm_signal_in + f_ex * sm_signal_ex + f_csf * sm_signal_csf
+
 
 # model2 stick(intra) + zepplin(extra) + ball(csf)
 def sm_signal_model_2(b, bd, Dpar_in, Dpar_ex, Dperp_ex, f_in, f_ex, f_csf):
-	# stick-like intra axonal compartement with Dperp_ex = 0
-	sm_signal_in = sm_signal_generic_reparam(b, bd, Dpar_in, 0)
-	# zepplin-like extra axonal compartement
-	sm_signal_ex = sm_signal_generic_reparam(b, bd, Dpar_ex, Dperp_ex)
-	# ball-like csf axonal compartement with Dpar_ex = Dperp_ex = 3 um^2/ms (free water diffusivity at in-vivo human brain temperature)
-	sm_signal_csf = sm_signal_generic_reparam(b, bd, 3., 3.)
-	# model2 doesnt enforces sum(fraction) = 1 directly, need to deal with it "later"
-	return f_in*sm_signal_in + f_ex*sm_signal_ex + f_csf*sm_signal_csf
-
-
+    # stick-like intra axonal compartement with Dperp_ex = 0
+    sm_signal_in = sm_signal_generic_reparam(b, bd, Dpar_in, 0)
+    # zepplin-like extra axonal compartement
+    sm_signal_ex = sm_signal_generic_reparam(b, bd, Dpar_ex, Dperp_ex)
+    # ball-like csf axonal compartement with Dpar_ex = Dperp_ex = 3 um^2/ms (free water diffusivity at in-vivo human brain temperature)
+    sm_signal_csf = sm_signal_generic_reparam(b, bd, 3., 3.)
+    # model2 doesnt enforces sum(fraction) = 1 directly, need to deal with it "later"
+    return f_in * sm_signal_in + f_ex * sm_signal_ex + f_csf * sm_signal_csf
