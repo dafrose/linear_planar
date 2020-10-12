@@ -9,7 +9,7 @@ def main(fdata, fNs, fsigmas, fcorr_data, fnan_map, fnan_mean):
     Ns = nib.load(fNs).get_data()
     sigmas = nib.load(fsigmas).get_data()
 
-    corr_data = np.sqrt(data**2 - 2*Ns[...,None]*(sigmas[...,None]**2))
+    corr_data = np.sqrt(data ** 2 - 2 * Ns[..., None] * (sigmas[..., None] ** 2))
 
     nan_map = np.zeros_like(corr_data, dtype=np.bool)
     nan_idx = np.where(np.isnan(corr_data))

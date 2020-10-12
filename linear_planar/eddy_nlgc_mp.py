@@ -6,7 +6,8 @@ import argparse
 import nibabel as nib
 import numpy as np
 
-DESCRIPTION = 'Joint correction of eddy currents and gradient non linearity correction using FSL tools. Cornelius Eichner 2018'
+DESCRIPTION = 'Joint correction of eddy currents and gradient non linearity correction using FSL tools. Cornelius ' \
+              'Eichner 2018 '
 
 PATH_GRAD_UNWARP = '/home/raid2/paquette/tools/gradunwarp/gradunwarp/core/gradient_unwarp.py'
 # PATH_EDDY = '/home/raid2/paquette/tools/eddy_openmp'
@@ -231,7 +232,7 @@ def main():
     SPLIT_DATA_FILES = sorted(os.listdir('split_data/'))
 
     if jump < 4:
-        for i in xrange(len(os.listdir('split_data/'))):
+        for i in range(len(os.listdir('split_data/'))):
             cmd = 'applywarp \
                     -i split_data/' + SPLIT_DATA_FILES[i] + ' \
                     -r split_data/' + SPLIT_DATA_FILES[0] + ' \
@@ -250,13 +251,14 @@ def main():
     os.system('mkdir -p jac_det_data')
     os.system('mkdir -p corr_data')
 
-    for i in xrange(len(os.listdir('comb_warp/'))):
+    for i in range(len(os.listdir('comb_warp/'))):
         cmd = 'python ' + PATH_CALC_JACOBIAN + ' --in comb_warp/' + COMB_WARP_FILES[i] + ' --out jac_det_data/jac.' + \
               COMB_WARP_FILES[i]
         os.system(cmd)
         cmd = 'fslmaths warped_data/' + SPLIT_DATA_FILES[i] + ' -mul jac_det_data/jac.' + COMB_WARP_FILES[
             i] + ' corr_data/' + SPLIT_DATA_FILES[i]
-        # cmd = 'fslmaths warped_data/' + SPLIT_DATA_FILES[i] + ' -div jac_det_data/jac.' + COMB_WARP_FILES[i] + ' corr_data/' + SPLIT_DATA_FILES[i]
+        # cmd = 'fslmaths warped_data/' + SPLIT_DATA_FILES[i] + ' -div jac_det_data/jac.' + COMB_WARP_FILES[i] + '
+        # corr_data/' + SPLIT_DATA_FILES[i]
         os.system(cmd)
 
     ######################

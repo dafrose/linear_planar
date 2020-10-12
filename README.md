@@ -30,5 +30,7 @@ This repository contains the preprocessing and fitting scripts for double PGSE d
 
 
 
+### Steps to make this work:
+1. download and install `autodmri` [github](https://github.com/samuelstjean/autodmri)
 
 

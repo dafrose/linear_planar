@@ -18,17 +18,17 @@ import scipy as sp
 # A_T2;k is the T2 attenuation of compartement k
 # A_D;k is the diffusion attenuation of compartement k
 
-# in practice, because we normalize the measured signal by B0
-# you either assume equal T1, T2, PD for each compartement and fit "volume fractions"
-# or you "do" something like f'_k = f_k * S_PD;k * A_T1;k * A_T2;k
-# where f'_k is a signal fraction instead of volume fraction, (i.e. volume fractions weighted by "some exponential" that depend on the underlying tissues parameters)
+# in practice, because we normalize the measured signal by B0 you either assume equal T1, T2, PD for each
+# compartement and fit "volume fractions" or you "do" something like f'_k = f_k * S_PD;k * A_T1;k * A_T2;k where f'_k
+# is a signal fraction instead of volume fraction, (i.e. volume fractions weighted by "some exponential" that depend
+# on the underlying tissues parameters)
 
 # Everything here assumes axi-symmetric B-tensor and D-tensor
 # so for exemple B = diag(b_para b_perp b_perp) (if this specific B-tensor is "pointing" to [1,0,0])
 # so for exemple D = diag(d_para d_perp d_perp) (if this specific D-tensor is "pointing" to [1,0,0])
 
-# because orientation is meaningless for Spherical mean,
-# both B-tensor and D-tensor are reparametrize into a "size" parameter and a "shape" parameters (can also be seen as an Isotropic and an Anisotropic parameter)
+# because orientation is meaningless for Spherical mean, both B-tensor and D-tensor are reparametrize into a "size"
+# parameter and a "shape" parameters (can also be seen as an Isotropic and an Anisotropic parameter)
 
 
 # D_Iso = Di = (D_para + 2*D_perp) / 3
