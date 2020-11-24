@@ -48,7 +48,19 @@ def evaluate_jacobian(F, pixdim):
     return jacdet
 
 
-def main():
+def calc_jacobian(in_file: str, out_file: str):
+    # Read data and extract necessary information
+    field = nib.load(in_file)
+    field_data = field.get_fdata()
+    hd_pixdim = field.header.get('pixdim')
+    pixdim = hd_pixdim[1:4]
+
+    jacdet = evaluate_jacobian(field_data, pixdim)
+
+    nib.save(nib.Nifti1Image(jacdet, field.affine), out_file)
+
+
+if __name__ == '__main__':
     # Load parser to read data from command line input
     parser = buildArgsParser()
     args = parser.parse_args()
@@ -60,16 +72,4 @@ def main():
     DATA = os.path.realpath(args.data)
     OUT = args.out
 
-    # Read data and extract necessary information
-    field = nib.load(DATA)
-    field_data = field.get_data()
-    hd_pixdim = field.header.get('pixdim')
-    pixdim = hd_pixdim[1:4]
-
-    jacdet = evaluate_jacobian(field_data, pixdim)
-
-    nib.save(nib.Nifti1Image(jacdet, field.affine), OUT)
-
-
-if __name__ == '__main__':
-    main()
+    calc_jacobian(DATA, OUT)
